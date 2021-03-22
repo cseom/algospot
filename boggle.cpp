@@ -6,28 +6,30 @@ using namespace std;
 
 int dx[8] = { 0,0,-1,1,-1,-1,1,1 };
 int dy[8] = { -1,1,0,0,-1,1,-1,1 };
-bool hasWordcheck;
+bool cache[5][5][10];
+char board[5][5];
 
-void hasWord(int x, int y, string ans, int cnt, string word, string board[5])
+bool hasWord(int x, int y, const string &word, int idx)
 {
-	if (!word.compare(ans))
+	cache[x][y][idx] = true;
+	if (y < 0 || x < 0 || x >= 5 || y >= 5)
+		return false;
+	if (board[x][y] != word[0])
+		return false;
+	if (word.size() == 1)
+		return true;
+	for (int dir = 0; dir < 8; dir++)
 	{
-		hasWordcheck = true;
-		return;
+		int nx = x + dx[dir];
+		int ny = y + dy[dir];
+		if (nx < 0 || ny < 0 || nx >= 5 || ny >= 5)
+			continue;
+		if (cache[nx][ny][idx + 1])
+			continue;
+		if (hasWord(nx, ny, word.substr(1), idx + 1))
+			return true;
 	}
-	if (hasWordcheck)
-		return;
-	for (int k = 0; k < 8; k++)
-	{
-		int nx = x + dx[k];
-		int ny = y + dy[k];
-		if (nx >= 0 && nx < 5 && ny >= 0 && ny < 5)
-		{
-			if (board[nx][ny] == word[cnt])
-				hasWord(nx, ny, ans + board[nx][ny], cnt + 1, word, board);
-		}
-	}
-	return;
+	return false;
 }
 
 int main(void)
@@ -37,34 +39,32 @@ int main(void)
 	while (tc--)
 	{
 		int n;
-		string board[5];
 		for (int i = 0; i < 5; i++)
 			cin >> board[i];
 		cin >> n;
 		vector<string> word(n);
 		for (int i = 0; i < n; i++)
 			cin >> word[i];
-		for (int k = 0; k < n; k++)
+		for (int i = 0; i < n; i++)
 		{
-			hasWordcheck = false;
-			for (int i = 0; i < 5; i++)
+			memset(cache, false, sizeof(cache));
+
+			bool checkWord = false;
+			for (int j = 0; j < 5; j++)
 			{
-				for (int j = 0; j < 5; j++)
+				for (int k = 0; k < 5; k++)
 				{
-					if (word[k][0] == board[i][j])
+					if (hasWord(j, k, word[i], 0))
 					{
-						string firstword = "";
-						firstword += word[k][0];
-						hasWord(i, j, firstword, 1, word[k], board);
-						if (hasWordcheck)
-							break;
+						checkWord = true;
+						break;
 					}
 				}
-				if (hasWordcheck)
+				if (checkWord)
 					break;
 			}
-			cout << word[k] << ' ';
-			if (hasWordcheck)
+			cout << word[i] << ' ';
+			if (checkWord)
 				cout << "YES\n";
 			else
 				cout << "NO\n";
