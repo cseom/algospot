@@ -20,6 +20,32 @@ int bruteforce(const vector<int> &h)
 }
 */
 
+/*
+int solveStack(vector<int> &h)
+{
+	stack<int> remaining;
+	int ret = 0;
+	h.push_back(0);
+	for (int i = 0; i < h.size(); i++)
+	{
+		while (!remaining.empty() && h[remaining.top()] >= h[i])
+		{
+			int j = remaining.top();
+			remaining.pop();
+			int width = -1;
+
+			if (remaining.empty())
+				width = i;
+			else
+				width = i - remaining.top() - 1;
+			ret = max(ret, h[j] * width);
+		}
+		remaining.push(i);
+	}
+	return ret;
+}
+*/
+
 int solve(int left, int right, const vector<int> &h)
 {
 	if (left == right)
