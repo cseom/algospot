@@ -1,6 +1,32 @@
 #include <iostream>
+#include <queue>
+#include <algorithm>
 #include <list>
 using namespace std;
+
+/*
+void josephus(int n, int k)
+{
+	queue<int> survivors;
+
+	for (int i = 1; i <= n; i++)
+		survivors.push(i);
+	while (n > 2)
+	{
+		survivors.pop();
+		n--;
+		for (int i = 0; i < k - 1; i++)
+		{
+			int people = survivors.front();
+			survivors.pop();
+			survivors.push(people);
+		}
+	}
+	int small = min(survivors.front(), survivors.back());
+	int big = max(survivors.front(), survivors.back());
+	printf("%d %d\n", small, big);
+}
+*/
 
 void josephus(int n, int k)
 {
